@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="game-title">SEGAGEO GAMES</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css">
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #1b1b1b;
+        }
+
+        .game-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 7vw;
+        }
+
+        .game-area {
+            flex: 1;
+            padding: 1vw;
+            position: relative;
+        }
+
+        .game-frame {
+            width: 100%;
+            height: 70vh;
+            border: 3px solid #333;
+            border-radius: 1vw;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 1vw;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1vw;
+            padding: 1vw;
+            background: #222;
+            border-radius: 1vw;
+        }
+
+        .game-info h2 {
+            color: #fff;
+            margin: 0;
+            font-size: 2vw;
+            font-weight: 700;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 1vw;
+        }
+
+        .btn {
+            padding: 0.8vw 1.5vw;
+            border: none;
+            border-radius: 0.5vw;
+            background: #2c7ffc;
+            color: white;
+            font-size: 1.2vw;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #1a5fcf;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .recommended-games {
+            width: 300px;
+            padding: 1vw;
+            background: #222;
+            overflow-y: auto;
+            max-height: calc(100vh - 7vw);
+        }
+
+        .recommended-games h3 {
+            color: #fff;
+            margin-top: 0;
+            font-size: 1.8vw;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5vw;
+        }
+
+        .game-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1vw;
+        }
+
+        .game-item {
+            display: flex;
+            align-items: center;
+            padding: 1vw;
+            background: #333;
+            border-radius: 0.8vw;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .game-item:hover {
+            background: #444;
+            transform: translateX(5px);
+        }
+
+        .game-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 0.5vw;
+            object-fit: cover;
+            margin-right: 1vw;
+        }
+
+        .game-item-info h4 {
+            margin: 0 0 0.3vw 0;
+            font-size: 1.2vw;
+            font-weight: 600;
+        }
+
+        .game-item-info p {
+            margin: 0;
+            font-size: 1vw;
+            color: #aaa;
+        }
+
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 1000;
+            display: none;
+        }
+
+        .fullscreen-overlay iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .fullscreen-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1001;
+        }
+
+        .close-fullscreen {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .close-fullscreen:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                flex-direction: column;
+            }
+            
+            .recommended-games {
+                width: 100%;
+                max-height: 300px;
+                order: 2;
+            }
+            
+            .game-area {
+                order: 1;
+            }
+            
+            .game-frame {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="/images/logo.png" alt="logo">
+        <h1>SEGAGEO</h1>
+    </nav>
+
+    <div class="game-container">
+        <div class="game-area">
+            <div class="game-frame">
+                <iframe id="game-iframe" src="" allowfullscreen></iframe>
+            </div>
+            <div class="game-controls">
+                <div class="game-info">
+                    <h2 id="game-name">Loading Game...</h2>
+                </div>
+                <div class="control-buttons">
+                    <button class="btn" onclick="toggleFullscreen()">
+                        <i class="fas fa-expand"></i> Fullscreen
+                    </button>
+                    <a href="/" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="recommended-games">
+            <h3>More Games</h3>
+            <div class="game-list">
+                <a href="/play/vex4" class="game-item">
+                    <img src="/images/vex4.jpg" alt="VEX 4">
+                    <div class="game-item-info">
+                        <h4>VEX 4</h4>
+                        <p>Platform Adventure</p>
+                    </div>
+                </a>
+                <a href="/play/vex5" class="game-item">
+                    <img src="/images/vex5.jpg" alt="VEX 5">
+                    <div class="game-item-info">
+                        <h4>VEX 5</h4>
+                        <p>Platform Adventure</p>
+                    </div>
+                </a>
+                <a href="/play/vex3" class="game-item">
+                    <img src="/images/vex3.jpg" alt="VEX 3">
+                    <div class="game-item-info">
+                        <h4>VEX 3</h4>
+                        <p>Platform Adventure</p>
+                    </div>
+                </a>
+                <a href="/play/slope" class="game-item">
+                    <img src="/images/slope.jpg" alt="Slope">
+                    <div class="game-item-info">
+                        <h4>Slope</h4>
+                        <p>Endless Running</p>
+                    </div>
+                </a>
+                <a href="/play/moto-x3m" class="game-item">
+                    <img src="/images/moto-x3m.jpg" alt="Moto X3M">
+                    <div class="game-item-info">
+                        <h4>Moto X3M</h4>
+                        <p>Racing Action</p>
+                    </div>
+                </a>
+                <a href="/play/retro-bowl" class="game-item">
+                    <img src="/images/retro-bowl.jpg" alt="Retro Bowl">
+                    <div class="game-item-info">
+                        <h4>Retro Bowl</h4>
+                        <p>Sports Game</p>
+                    </div>
+                </a>
+                <a href="/play/drive-mad" class="game-item">
+                    <img src="/images/drive-mad.jpg" alt="Drive Mad">
+                    <div class="game-item-info">
+                        <h4>Drive Mad</h4>
+                        <p>Racing Challenge</p>
+                    </div>
+                </a>
+                <a href="/play/bob-the-robber-2" class="game-item">
+                    <img src="/images/bob-the-robber-2.png" alt="Bob The Robber 2">
+                    <div class="game-item-info">
+                        <h4>Bob The Robber 2</h4>
+                        <p>Stealth Adventure</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <div class="fullscreen-controls">
+            <button class="close-fullscreen" onclick="exitFullscreen()">
+                <i class="fas fa-times"></i> Exit Fullscreen
+            </button>
+        </div>
+        <iframe id="fullscreen-iframe" src="" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        // Get game path from URL
+        const pathSegments = window.location.pathname.split('/');
+        const gameName = pathSegments[pathSegments.length - 1];
+        const gameUrl = `/games/${gameName}/`;
+        
+        // Load game
+        document.getElementById('game-iframe').src = gameUrl;
+        document.getElementById('fullscreen-iframe').src = gameUrl;
+        document.getElementById('game-name').textContent = gameName.toUpperCase().replace(/-/g, ' ');
+        document.getElementById('game-title').textContent = `${gameName.toUpperCase().replace(/-/g, ' ')} - SEGAGEO GAMES`;
+
+        function toggleFullscreen() {
+            const overlay = document.getElementById('fullscreen-overlay');
+            overlay.style.display = 'block';
+            
+            // Try to enter browser fullscreen if supported
+            if (overlay.requestFullscreen) {
+                overlay.requestFullscreen();
+            } else if (overlay.webkitRequestFullscreen) {
+                overlay.webkitRequestFullscreen();
+            } else if (overlay.msRequestFullscreen) {
+                overlay.msRequestFullscreen();
+            }
+        }
+
+        function exitFullscreen() {
+            const overlay = document.getElementById('fullscreen-overlay');
+            overlay.style.display = 'none';
+            
+            // Exit browser fullscreen if active
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+
+        // Handle ESC key to exit fullscreen
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                exitFullscreen();
+            }
+        });
+
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                exitFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>

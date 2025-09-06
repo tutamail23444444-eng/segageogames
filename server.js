@@ -10,6 +10,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Handle game wrapper routes
+app.get('/play/:gameName', (req, res) => {
+  res.sendFile(path.join(__dirname, 'game-wrapper.html'));
+});
+
 // Serve static files from the root directory
 app.use(express.static('.', {
   setHeaders: (res) => {
