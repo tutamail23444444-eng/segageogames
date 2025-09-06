@@ -330,16 +330,21 @@
     </div>
 
     <script>
-        // Get game path from URL
+        // Embed Stickman Hook in windowed view with fullscreen and UI options
         const pathSegments = window.location.pathname.split('/');
         const gameName = pathSegments[pathSegments.length - 1];
-        const gameUrl = `/games/${gameName}/`;
-        
-        // Load game
+        let gameUrl = `/games/${gameName}/`;
+        let gameTitle = gameName.toUpperCase().replace(/-/g, ' ');
+
+        if (gameName === 'stickman-hook') {
+            gameUrl = 'https://ubg742.github.io/stckmnhk/index.html';
+            gameTitle = 'Stickman Hook';
+        }
+
         document.getElementById('game-iframe').src = gameUrl;
         document.getElementById('fullscreen-iframe').src = gameUrl;
-        document.getElementById('game-name').textContent = gameName.toUpperCase().replace(/-/g, ' ');
-        document.getElementById('game-title').textContent = `${gameName.toUpperCase().replace(/-/g, ' ')} - SEGAGEO GAMES`;
+        document.getElementById('game-name').textContent = gameTitle;
+        document.getElementById('game-title').textContent = `${gameTitle} - SEGAGEO GAMES`;
 
         function toggleFullscreen() {
             const overlay = document.getElementById('fullscreen-overlay');
